@@ -91,7 +91,7 @@ class StoryList {
     // adds a new story into the story list using unshift
     this.stories.unshift(story);
     user.ownStories.unshift(story);
-
+f
     return story;
   }
 

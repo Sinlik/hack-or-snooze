@@ -58,10 +58,15 @@ class StoryList {
     // of stories
 
     // query the /stories endpoint (no auth required)
-    const response = await axios({
+    try{ 
+      const response = await axios({
       url: `${BASE_URL}/stories`,
       method: "GET",
     });
+  }
+    catch(e) {
+      console.log(e)
+    }
 
     // turn plain old story objects from API into instances of Story class
     const stories = response.data.stories.map(story => new Story(story));
@@ -91,7 +96,6 @@ class StoryList {
     // adds a new story into the story list using unshift
     this.stories.unshift(story);
     user.ownStories.unshift(story);
-f
     return story;
   }
 
@@ -112,8 +116,6 @@ f
     // filter out the story whose ID we are removing
     this.stories = this.stories.filter(story => story.storyId !== storyId);
 
-    // do the same thing for the user's list of stories & their favorites
-    // we don't want the same Id's to be equal. We want them to be unique
     user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
     user.favorites = user.favorites.filter(s => s.storyId !== storyId);
   }
@@ -247,8 +249,8 @@ class User {
    */
 
   async addFavorite(story) {
-    this.favorites.push(story);
     await this._addOrRemoveFavorite("add", story)
+    this.favorites.push(story);
   }
 
   /** Remove a story to the list of user favorites and update the API
